@@ -1,0 +1,13 @@
+﻿  pch.cpp
+  ClientController.cpp
+c:\users\лера\source\repos\mvc_gps_client\mvc_gps_client\nmeamodel.h(22): warning C4305: =: усечение из "double" в "float"
+  ClientView.cpp
+c:\users\лера\source\repos\mvc_gps_client\mvc_gps_client\nmeamodel.h(22): warning C4305: =: усечение из "double" в "float"
+  MVC_GPS_Client.cpp
+c:\users\лера\source\repos\mvc_gps_client\mvc_gps_client\nmeamodel.h(22): warning C4305: =: усечение из "double" в "float"
+  NMEAModel.cpp
+c:\users\лера\source\repos\mvc_gps_client\mvc_gps_client\nmeamodel.h(22): warning C4305: =: усечение из "double" в "float"
+c:\users\лера\source\repos\mvc_gps_client\mvc_gps_client\nmeamodel.cpp(8): warning C4305: +=: усечение из "double" в "float"
+c:\users\лера\source\repos\mvc_gps_client\mvc_gps_client\nmeamodel.cpp(9): warning C4305: +=: усечение из "double" в "float"
+  Создание кода...
+  MVC_GPS_Client.vcxproj -> C:\Users\Лера\source\repos\MVC_GPS_Client\Debug\MVC_GPS_Client.exe
