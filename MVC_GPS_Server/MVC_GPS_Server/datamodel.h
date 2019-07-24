@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <windows.h>
+#include "log.h"
 
 enum MESSAGESFROMSERVER { ERR, GOODCONNECT, GOODAUTH, ENDCONNECT, ACKNOWLEDGE }; //Типы сообщений, приходящих с сервера
 enum MESSAGETYPES { SERVICE, LOG, NMEA }; //Это идёт на сервер

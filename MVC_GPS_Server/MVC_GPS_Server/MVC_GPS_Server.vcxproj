@@ -152,12 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="datamodel.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="servcontroller.h" />
     <ClInclude Include="serverview.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datamodel.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="MVC_GPS_Server.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

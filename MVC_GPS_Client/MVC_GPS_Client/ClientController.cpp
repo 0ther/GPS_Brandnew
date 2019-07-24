@@ -78,10 +78,12 @@ void CONTROLLER::SendSingle(int input) {
 	for (int i = 0; i < N; i++) {
 		filename.getline(buff, 60);
 		msg1 = buff;
+		std::cout << msg1 << std::endl;
 		int msg_size = msg1.size();
 		send(MyServer, msg1.c_str(), msg_size, NULL);
 		Sleep(30);
 	}
+	std::cout << "Sent!" << std::endl;
 	filename.close();
 };
 
@@ -90,13 +92,13 @@ int CONTROLLER::ReceiveSingle() {
 	for (int i = 0; i < 3; i++) {
 		char msg[60] = {};
 		recv(MyServer, msg, sizeof(msg), NULL);
-    //std::cout << msg << std::endl;
+    std::cout << msg << std::endl;
 		Sleep(30);
 		if (i == 1) {
 			int answer = msg[14] - '0'; //¬от тут пересчитать индекс массива, сделано
       //std::cout << answer << std::endl;
-      recv(MyServer, msg, sizeof(msg), NULL); //ѕолучаем закрывающую скобку
-      //std::cout << "—ообщение прин€то!" << std::endl;
+      recv(MyServer, msg, sizeof(msg), NULL); //ѕолучаем закрывающую скобku
+			std::cout << "—ообщение прин€то!" << std::endl;
       return answer;
 		}
 	}
@@ -184,13 +186,30 @@ void CONTROLLER::NMEAInAThread(bool& flag) {
 	}
 };
 
+static int counter = 0;
 
 void CONTROLLER::JSONInAThread(bool& flag) {
 	while (flag) {
 		Sleep(500);
 		GenerateGPSJSON();
 		SendSingle(NMEA);
+		//ReceiveSingle();
 		Sleep(260);
+		counter++;
+		std::cout << counter << "messages sent" << std::endl;
+		if (counter > 15) {
+			char buf[60];
+			if (recv(MyServer, buf, sizeof(buf), NULL)) {
+				std::cout << buf << std::endl;
+				if (counter > 30)	
+					if (buf[15] == '4') std::cout << " витанци€€€€€€€€" << std::endl;
+					else std::cout << "ќшибка!!1!" << std::endl;
+			}
+		}
+		//if (ReceiveSingle() == ACKNOWLEDGE) {
+			//std::cout << " витанци€ must be получена" << std::endl;
+		//}
+		//else std::cout << "—ообщение с ошибкой получено" << std::endl;
 	}
 };
 
@@ -217,3 +236,18 @@ void CONTROLLER::SwitchJSONThread(bool& flag) {
 		SenFlag = 0;
 	}
 }; //поток, записывающий структуру в JSON
+
+enum FATALERROS {LOGLIMIT, SUDDENOUT, NOAPPROVE, FORMERROR};
+
+void CONTROLLER::GenerateFATAL(int input, int reason) {
+	std::lock_guard<std::mutex> lock(JSONMutex);
+	std::ofstream fout("service.json");
+	if (fout.is_open()) {
+		fout << "{\n";
+		fout << " \"Type\" : \"" << SERVICE << "\", \n";
+		fout << " \"Message\" : \"" << FATALERR << "\", \n";
+		fout << " \"Reason\" : \"" << reason << "\" \n";
+		fout << "}";
+		fout.close();
+	}
+}

@@ -6,9 +6,9 @@
 #include <mutex>
 
 
-enum MESSAGESFROMSERVER { ERR, GOODCONNECT, GOODAUTH, ENDCONNECT }; //Типы сообщений, приходящих с сервера
+enum MESSAGESFROMSERVER { ERR, GOODCONNECT, GOODAUTH, ENDCONNECT, ACKNOWLEDGE }; //Типы сообщений, приходящих с сервера
 enum MESSAGETYPES { SERVICE, LOG, NMEA }; //Это идёт на сервер
-enum SERVICETYPES { BEGIN, STARTSEND, STOPSEND, End }; //Это типы сервисных сообщений
+enum SERVICETYPES { BEGIN, STARTSEND, STOPSEND, End, FATALERR }; //Это типы сервисных сообщений
 enum INTMSGTYPES { ERRTYPE, SUCREG, SUCCON, BADCON, LOGOUT, END }; //Это идёт к пользователю
 
 

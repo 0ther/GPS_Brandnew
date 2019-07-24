@@ -92,6 +92,9 @@ void CONTROLLER::ReceiveRestOfJSON(int type) {
 		recv(Sock, msg, sizeof(msg), NULL);
 		//std::cout << msg << std::endl;
 		Database_1 << msg << std::endl;
+		if (N == 2 && i == 1) {
+			std::cout << msg << std::endl;
+		}
 	}
 	switch (type) {
 	case SERVICE:
@@ -151,8 +154,10 @@ void CONTROLLER::SendSingle(int type) {
 	std::cout << "Message sent!" << std::endl;
 }
 
+enum FATALERROS { LOGLIMIT, SUDDENOUT, NOAPPROVE, FORMERROR };
 
 void CONTROLLER::ParseService() {
+	bool IsFatal = 0;
 	std::ifstream DB;
 	DB.open("temp.json", std::ios::app);
 	std::string buf;
@@ -189,6 +194,13 @@ void CONTROLLER::ParseService() {
 					//std::cout << "Сообщение о закрытии получено" << std::endl;
 					break;
 				}
+				case FATALERR:
+				{
+					IsFatal = 1;
+					std::cout << "Соединение с сервером разорвано из-за фатальной ошибки" << std::endl;
+					CloseConnection();
+					break;
+				}
 				default: //Чет не то прислал
 				{
 					SendSingle(ERR);
@@ -197,6 +209,31 @@ void CONTROLLER::ParseService() {
 				}
 			}
 		}
+		if (IsFatal) {
+			getline(DB, buf);
+			int type = buf[13] - '0';
+			switch (type) {
+			case LOGLIMIT: {
+				WriteIntoLog("FATAL: Превышено количество попыток авторизации");
+				break;
+			} //Тут функции записи в лог конкретных сообщений
+			case SUDDENOUT: {
+				WriteIntoLog("FATAL: клиент внезапно завершил работу");
+				break;
+			}
+			case NOAPPROVE: {
+				WriteIntoLog("FATAL: Клиент не получил квитанций вовремя");
+				break;
+			}
+			case FORMERROR: {
+				WriteIntoLog("FATAL: Клиент не может формировать сообщения NMEA");
+				break;
+			}
+			default: {
+				break;
+			}
+			}
+	  }
 	}
 	Sleep(940);
 };

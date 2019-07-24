@@ -23,6 +23,7 @@ public:
 	int ReceiveSingle();
   void GenerateServJSON(int);
 	void GenerateLogJSON(std::string, std::string);
+	void GenerateFATAL(int, int);
   void NMEAInAThread(bool&); //1
   void JSONInAThread(bool&);
   //Методы, отвечающие за создание потоков
