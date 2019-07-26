@@ -11,7 +11,7 @@ void ManModel::Update() {
 
 
 //Методы, отвечающие за генерацию сообщений
-void NMEAMODEL::Generate_NMEA() { //генерирует и записывает в файл
+void DATAMODEL::Generate_NMEA() { //генерирует и записывает в файл
 	this->Update();
 	SYSTEMTIME st;
 	GetLocalTime(&st);
@@ -91,6 +91,7 @@ void NMEAMODEL::Generate_NMEA() { //генерирует и записывает в файл
 	escape.erase(escape.size() - 4, 2);
 	escape += ",x.x,a,a*hh<CR><LF>";
 
+	
 
 	std::lock_guard<std::mutex> lock(NMEAMutex);
 	std::ofstream out;
@@ -100,7 +101,42 @@ void NMEAMODEL::Generate_NMEA() { //генерирует и записывает в файл
 };
 
 
-RMC NMEAMODEL::Generate_RMC(std::string input) { //сюда как аргумент передаётся функция GetLastLine("history.txt")
+
+/*Вот в это место вставляются удалённые ранее функции*/
+
+/*
+bool CheckIntegrity(RMC input) {
+	//$GPRMC hhmmss.ss GGMM.MM P gggmm.mm J v.v,_b.b ddmmyy x.x,n,m*hh<CR><LF>
+	if (input.Preamble != "$GPRMC" || input.Sec1 != "0.x,x.x," || input.Sec2 != "x.x,a,a*hh<CR><LF>") {
+	//Ошибка формирования статических последовательностей
+		return false;
+	}
+	if (input.LaFlag != "N" && input.LaFlag != "S" || input.LoFlag != "W" && input.LoFlag != "E") {
+	//Ошибка формирования флагов
+		return false;
+	}
+  //Регулярочки для остального? Даааааааааа
+	std::cmatch Result;
+	std::regex exprdate("[0-9]{6}");
+	std::regex expr("([0-9]*.[0-9]{2})");
+
+	if (!std::regex_match(input.Latitude.c_str(), Result, expr)) {
+		return false;
+	}
+	if (!std::regex_match(input.Longitude.c_str(), Result, expr)) {
+		return false;
+	}
+	if (!std::regex_match(input.Date.c_str(), Result, exprdate)) {
+		return false;
+	}
+	if (!std::regex_match(input.Time.c_str(), Result, expr)) {
+		return false;
+	}
+	return true;
+}
+
+
+RMC DATAMODEL::Parse_RMC(std::string input) { //сюда как аргумент передаётся функция GetLastLine("history.txt")
 	RMC A;
 	A.Preamble = input.substr(0, 6);
 	A.Time = input.substr(7, 9);
@@ -111,12 +147,15 @@ RMC NMEAMODEL::Generate_RMC(std::string input) { //сюда как аргумент передаётся 
 	A.Sec1 = input.substr(40, 8);
 	A.Date = input.substr(48, 6);
 	A.Sec2 = input.substr(55, 18); 
-	return A;
+	if (CheckIntegrity(A))	return A;
+	else return RMC();
 };
 
+*/
 
-void NMEAMODEL::GenerateGPSJSON() {//А сюда как аргумент - GenerateRMC()
-	RMC input = Generate_RMC(GetLastLine("history.txt"));
+
+void DATAMODEL::GenerateGPSJSON() {//А сюда как аргумент - GenerateRMC()
+	RMC input = Parse_RMC(GetLastLine("history.txt"));
 	std::lock_guard<std::mutex> lock(JSONMutex);
 	std::ofstream fout("temp.json");
 	if (fout.is_open()) {
@@ -136,7 +175,7 @@ void NMEAMODEL::GenerateGPSJSON() {//А сюда как аргумент - GenerateRMC()
 //Вспомогательные функции
 //Пробежать файл до последней строки
 
-std::string NMEAMODEL::GetLastLine(std::string filename)
+std::string DATAMODEL::GetLastLine(std::string filename)
 {
 	std::lock_guard<std::mutex> lock(NMEAMutex);
 	std::ifstream inClientFile(filename, std::ios::in);

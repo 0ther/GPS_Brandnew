@@ -3,18 +3,27 @@
 #include <windows.h>
 #include <fstream>
 #include <string>
+#include <regex>
+#include <iostream>
 #include <mutex>
+
+#include "RMC_Parser.h" //А вот и библиотека для функции
+
+#pragma comment(lib, "LibRMCParser.lib")
 
 
 enum MESSAGESFROMSERVER { ERR, GOODCONNECT, GOODAUTH, ENDCONNECT, ACKNOWLEDGE }; //Типы сообщений, приходящих с сервера
 enum MESSAGETYPES { SERVICE, LOG, NMEA }; //Это идёт на сервер
 enum SERVICETYPES { BEGIN, STARTSEND, STOPSEND, End, FATALERR }; //Это типы сервисных сообщений
 enum INTMSGTYPES { ERRTYPE, SUCREG, SUCCON, BADCON, LOGOUT, END }; //Это идёт к пользователю
+enum FATALERROS { LOGLIMIT, SUDDENOUT, NOAPPROVE, FORMERROR };
 
-
+/*
 struct RMC {
 	std::string Preamble, Time, Latitude, Longitude, Date, LaFlag, LoFlag, Sec1, Sec2;
 };
+
+*/
 
 
 class ManModel {
@@ -32,14 +41,14 @@ private:
 };
 
 
-class NMEAMODEL : public ManModel {
+class DATAMODEL : public ManModel {
 public:
-	NMEAMODEL() : ManModel() {};
-	NMEAMODEL(float a, float b) : ManModel(a, b) {};
+	DATAMODEL() : ManModel() {};
+	DATAMODEL(float a, float b) : ManModel(a, b) {};
 
 	//Методы, отвечающие за создание сообщений разных типов
 	void Generate_NMEA();
-	RMC Generate_RMC(std::string);
+	//RMC Parse_RMC(std::string);
 	void GenerateGPSJSON();
 
   std::mutex NMEAMutex; //отвечает за доступ к файлу с NMEA-строками (history.txt)

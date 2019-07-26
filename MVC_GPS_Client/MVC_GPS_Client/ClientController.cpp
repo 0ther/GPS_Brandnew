@@ -29,6 +29,7 @@ void CONTROLLER::Connect() {
 
     if (ReceiveSingle() != GOODCONNECT) {
       std::cout << "ѕришел некорректный ответ" << std::endl;
+			GiveMessageToUser(ERR);
       exit(2);
     }
 };
@@ -203,13 +204,12 @@ void CONTROLLER::JSONInAThread(bool& flag) {
 				std::cout << buf << std::endl;
 				if (counter > 30)	
 					if (buf[15] == '4') std::cout << " витанци€€€€€€€€" << std::endl;
-					else std::cout << "ќшибка!!1!" << std::endl;
+					else {
+						GenerateFATAL(FATALERR, NOAPPROVE);
+						SendSingle(SERVICE);
+					}
 			}
 		}
-		//if (ReceiveSingle() == ACKNOWLEDGE) {
-			//std::cout << " витанци€ must be получена" << std::endl;
-		//}
-		//else std::cout << "—ообщение с ошибкой получено" << std::endl;
 	}
 };
 
@@ -236,8 +236,6 @@ void CONTROLLER::SwitchJSONThread(bool& flag) {
 		SenFlag = 0;
 	}
 }; //поток, записывающий структуру в JSON
-
-enum FATALERROS {LOGLIMIT, SUDDENOUT, NOAPPROVE, FORMERROR};
 
 void CONTROLLER::GenerateFATAL(int input, int reason) {
 	std::lock_guard<std::mutex> lock(JSONMutex);

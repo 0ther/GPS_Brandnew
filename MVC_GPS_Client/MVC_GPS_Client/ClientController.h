@@ -8,13 +8,13 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <WinSock2.h>
 
-class CONTROLLER : public NMEAMODEL {
+class CONTROLLER : public DATAMODEL {
 private:
   bool GenFlag = 0;
   bool SenFlag = 0;
 public:
-	CONTROLLER() : NMEAMODEL() {};
-  CONTROLLER(float a, float b) : NMEAMODEL(a, b) {};
+	CONTROLLER() : DATAMODEL() {};
+  CONTROLLER(float a, float b) : DATAMODEL(a, b) {};
 	//Функции, относящиеся к общению с сервером
 	void Connect();
 	void Disconnect();
