@@ -4,7 +4,7 @@
 #include <fstream>
 #define WIN32_LEAN_AND_MEAN
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include "NMEAModel.h"
+#include "DataModel.h"
 #pragma comment(lib, "ws2_32.lib")
 #include <WinSock2.h>
 
@@ -32,6 +32,7 @@ public:
 
 	//Функции, относящиеся к общению с Представлением
 	void GiveMessageToUser(int);
+	void ThrowFatal(int);
 	int Authorisation();
 
 	void SetSocket(SOCKET A) { MyServer = A; };

@@ -11,9 +11,13 @@
 #include <WinSock2.h>
 #include "datamodel.h"
 
+
+enum FATALSINSERVER { WSAStartupError, FailConnect }; //это идёт к пользователю
+enum FATALERRORSOFCLIENT { LOGLIMIT, SUDDENOUT, NOAPPROVE, FORMERROR };
+
 class CONTROLLER : public DATAMODEL {
 public:
-
+	void ThrowFatal(int);
 	bool Authorisation(std::string, std::string);
 	void Connect();
 	void CloseConnection();

@@ -7,7 +7,7 @@ void CONTROLLER::Connect() {
 		WORD DLLVersion = MAKEWORD(2, 1);
 		if (WSAStartup(DLLVersion, &wsaData) != 0) {
 			GiveMessageToUser(ERR);
-			exit(1);
+			ThrowFatal(WSAStartupError);
 		}
 
 		SOCKADDR_IN addr;
@@ -19,7 +19,7 @@ void CONTROLLER::Connect() {
 		Connection = socket(AF_INET, SOCK_STREAM, NULL);
 		if (connect(Connection, (SOCKADDR*)&addr, sizeof(addr)) != 0) {
 			GiveMessageToUser(ERR);
-			exit(1);
+			ThrowFatal(FailConnect);
 		}
 
 		SetSocket(Connection);
@@ -30,7 +30,7 @@ void CONTROLLER::Connect() {
     if (ReceiveSingle() != GOODCONNECT) {
       std::cout << "Пришел некорректный ответ" << std::endl;
 			GiveMessageToUser(ERR);
-      exit(2);
+			ThrowFatal(FailMessageExchange);
     }
 };
 
@@ -55,6 +55,7 @@ void CONTROLLER::Disconnect() {
 	GiveMessageToUser(BADCON);
 };
 
+enum MSGSizes {SERVSIZE = 4, LOGSIZE = 5, RMCSIZE = 9};
 
 void CONTROLLER::SendSingle(int input) {
   std::lock_guard<std::mutex> lock(JSONMutex);
@@ -62,15 +63,15 @@ void CONTROLLER::SendSingle(int input) {
 	std::ifstream filename;
 	switch (input) {
 	case SERVICE: //Сообщение служебного характера
-		N = 4;
+		N = SERVSIZE;
 		filename.open("service.json");
 		break;
 	case LOG: //Сообщение с логином и паролем
-		N = 5;
+		N = LOGSIZE;
 		filename.open("login.json");
 		break;
-	case NMEA: //Сообщение с координатами
-		N = 9;
+	case RMCMSG: //Сообщение с координатами
+		N = RMCSIZE;
 		filename.open("temp.json");
 		break;
 	}
@@ -129,9 +130,28 @@ int CONTROLLER::Authorisation() {
 };
 
 
+void CONTROLLER::ThrowFatal(int input) {
+	switch (input) {
+	case WSAStartupError: {
+		std::cout << "Ошибка версии библиотеки сокетов" << std::endl;
+		break;
+	}
+	case FailConnect: {
+		std::cout << "Ошибка установки соединения" << std::endl;
+		break;
+	}
+	case FailMessageExchange: {
+		std::cout << "Ошибка предварительного обмена сообщениями" << std::endl;
+		break;
+	}
+	default: break;
+	}
+}
+
+
 void CONTROLLER::GiveMessageToUser(int input) {
 	switch (input) {
-	case ERR: //Сообщение об ошибке
+	case ERRTYPE: //Сообщение об ошибке
 		std::cout << "Ошибка!" << std::endl;
 		break;
 	case SUCREG: //Успешное завершение регистрации
@@ -193,7 +213,7 @@ void CONTROLLER::JSONInAThread(bool& flag) {
 	while (flag) {
 		Sleep(500);
 		GenerateGPSJSON();
-		SendSingle(NMEA);
+		SendSingle(RMCMSG);
 		//ReceiveSingle();
 		Sleep(260);
 		counter++;

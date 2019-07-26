@@ -155,14 +155,14 @@
     <ClInclude Include="ClientView.h" />
     <ClInclude Include="Locks.h" />
     <ClInclude Include="MVC_GPS_Client.h" />
-    <ClInclude Include="NMEAModel.h" />
+    <ClInclude Include="DataModel.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClientController.cpp" />
     <ClCompile Include="ClientView.cpp" />
     <ClCompile Include="MVC_GPS_Client.cpp" />
-    <ClCompile Include="NMEAModel.cpp" />
+    <ClCompile Include="DataModel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

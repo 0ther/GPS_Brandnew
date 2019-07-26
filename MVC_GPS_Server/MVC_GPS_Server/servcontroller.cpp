@@ -7,8 +7,8 @@ void CONTROLLER::Connect() {
 	WORD DLLVersion = MAKEWORD(2, 1);
 
 	if (WSAStartup(DLLVersion, &wsaData) != 0) {
-		//std::cout << "Error" << std::endl;
-		exit(1);
+		ThrowFatal(WSAStartupError);
+		//тут кинуть ошибку
 	}
 
 	SOCKADDR_IN addr;
@@ -24,14 +24,11 @@ void CONTROLLER::Connect() {
 	newConnection = accept(sListen, (SOCKADDR*)&addr, &sizeofaddr);
 
 	if (newConnection == 0) {
-		exit(1);
+		ThrowFatal(FailConnect);
 		//тут кинуть ошибку
 	}
 	else {
 		Sock = newConnection;
-		//ReceiveSingle();
-		//Sleep(500);
-		//SendSingle(4);
 		bool start = true;
 		SwitchReceivingSocket(start);
 	}
@@ -63,6 +60,7 @@ void CONTROLLER::ReceiveSingle() {
 	//std::cout << "Сообщение принято!" << std::endl;
 };
 
+enum MSGSIZES { SERVBUF = 2, LOGBUF = 3, NMEABUF = 7 };
 
 void CONTROLLER::ReceiveRestOfJSON(int type) {
 	std::ofstream Database_1("temp.json", std::ios::out);
@@ -71,18 +69,18 @@ void CONTROLLER::ReceiveRestOfJSON(int type) {
 	switch (type) {
 	case SERVICE: //Служебное сообщение, в файле ещё 2 строчки
 	{
-		N = 2;
+		N = SERVBUF;
 		break;
 	}
 	case LOG: //Сообщение с логином, 3 строчки
 	{
-		N = 3;
+		N = LOGBUF;
 		break;
 	}
 	case NMEA: //Сообщение с координатами, 7 строчек
 	{
 		std::cout << "Приняты координаты" << std::endl;
-		N = 7;
+		N = NMEABUF;
 		break;
 	}
 	}
@@ -154,7 +152,6 @@ void CONTROLLER::SendSingle(int type) {
 	std::cout << "Message sent!" << std::endl;
 }
 
-enum FATALERROS { LOGLIMIT, SUDDENOUT, NOAPPROVE, FORMERROR };
 
 void CONTROLLER::ParseService() {
 	bool IsFatal = 0;
@@ -522,3 +519,18 @@ void CONTROLLER::DeleteUser() {
 		DeleteUser();
 	}
 };
+
+
+void CONTROLLER::ThrowFatal(int input) {
+	switch (input) {
+	case WSAStartupError: {
+		std::cout << "Ошибка версии библиотеки сокетов" << std::endl;
+		exit(1);
+	}
+	case FailConnect: {
+		std::cout << "Ошибка установки соединения" << std::endl;
+		exit(1);
+	}
+	default: break;
+	}
+}
