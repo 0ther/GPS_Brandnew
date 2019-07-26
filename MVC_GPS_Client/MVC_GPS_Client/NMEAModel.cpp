@@ -155,6 +155,7 @@ RMC DATAMODEL::Parse_RMC(std::string input) { //сюда как аргумент передаётся фун
 
 
 void DATAMODEL::GenerateGPSJSON() {//А сюда как аргумент - GenerateRMC()
+	toJSON();
 	RMC input = Parse_RMC(GetLastLine("history.txt"));
 	std::lock_guard<std::mutex> lock(JSONMutex);
 	std::ofstream fout("temp.json");
@@ -170,6 +171,8 @@ void DATAMODEL::GenerateGPSJSON() {//А сюда как аргумент - GenerateRMC()
 		fout << "}";
 		fout.close();
 	}
+	//rapidjson::Value
+	//rapidjson::print("temp.json"); //Эта функция взята из сторонней библиотеки
 }; 
 
 //Вспомогательные функции
@@ -192,4 +195,28 @@ std::string DATAMODEL::GetLastLine(std::string filename)
 	inClientFile.close();
 	if (counter > 100) inClientFile.clear();
 	return str;
+}
+
+
+rapidjson::Document toJSON() {
+rapidjson::Document document;
+document.SetArray();
+
+std::vector<std::string> files = { "abc", "def" };
+rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+for (const auto file : files) {
+	rapidjson::Value value;
+	value.SetString(file.c_str(), file.length(), allocator);
+	document.PushBack(value, allocator);
+	// Or as one liner:
+	// document.PushBack(rapidjson::Value().SetString(file.c_str(), file.length(), allocator), allocator);
+}
+
+rapidjson::StringBuffer strbuf;
+rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+document.Accept(writer);
+
+std::cout << strbuf.GetString();
+
+return document;
 }

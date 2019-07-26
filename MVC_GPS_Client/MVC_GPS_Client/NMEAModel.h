@@ -7,10 +7,16 @@
 #include <iostream>
 #include <mutex>
 
+#include "rapidjson/document.h"//А вот и внешняя библиотека
+#include "rapidjson/stringbuffer.h"
+//#include "rapidjson/writer.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/rapidjson.h"
 #include "RMC_Parser.h" //А вот и библиотека для функции
 
 #pragma comment(lib, "LibRMCParser.lib")
 
+using namespace rapidjson;
 
 enum MESSAGESFROMSERVER { ERR, GOODCONNECT, GOODAUTH, ENDCONNECT, ACKNOWLEDGE }; //Типы сообщений, приходящих с сервера
 enum MESSAGETYPES { SERVICE, LOG, NMEA }; //Это идёт на сервер
@@ -55,3 +61,5 @@ public:
   std::mutex JSONMutex; //отвечает за доступ к файлу temp.json, куда записываются все json-ы
   std::string GetLastLine(std::string);
 };
+
+rapidjson::Document toJSON();
