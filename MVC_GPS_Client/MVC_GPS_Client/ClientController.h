@@ -38,4 +38,5 @@ public:
 	void SetSocket(SOCKET A) { MyServer = A; };
 private:
 	SOCKET MyServer = NULL;
+	int AuthTries = 5;
 };

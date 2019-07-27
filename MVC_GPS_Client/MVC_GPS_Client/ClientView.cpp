@@ -3,6 +3,7 @@
 
 
 void INTERFACE::Login() {
+	Connect();
 	if (Authorisation()) Conversation();
 	else GiveMessageToUser(ERR);
 };

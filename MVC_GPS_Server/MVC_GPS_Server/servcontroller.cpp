@@ -79,7 +79,7 @@ void CONTROLLER::ReceiveRestOfJSON(int type) {
 	}
 	case NMEA: //Сообщение с координатами, 7 строчек
 	{
-		std::cout << "Приняты координаты" << std::endl;
+		//std::cout << "Приняты координаты" << std::endl;
 		N = NMEABUF;
 		break;
 	}
@@ -91,7 +91,7 @@ void CONTROLLER::ReceiveRestOfJSON(int type) {
 		//std::cout << msg << std::endl;
 		Database_1 << msg << std::endl;
 		if (N == 2 && i == 1) {
-			std::cout << msg << std::endl;
+			//std::cout << msg << std::endl;
 		}
 	}
 	switch (type) {
@@ -145,11 +145,11 @@ void CONTROLLER::SendSingle(int type) {
 		in.getline(buff, 60);
 		msg1 = buff;
 		int msg_size = msg1.size();
-		std::cout << msg1 << std::endl;
+		//std::cout << msg1 << std::endl;
 		send(Sock, msg1.c_str(), msg_size, NULL);
 		Sleep(30);
 	};
-	std::cout << "Message sent!" << std::endl;
+	//std::cout << "Message sent!" << std::endl;
 }
 
 
@@ -283,7 +283,7 @@ void CONTROLLER::ParseNMEA() {
 			Ranswer += answer;
 			Ranswer += " ";
 		}
-		std::cout << std::endl << "Размер строки: " << Ranswer.size() << std::endl;
+		//std::cout << std::endl << "Размер строки: " << Ranswer.size() << std::endl;
 		if (Ranswer.size() == 38) { 
 			Write(Ranswer); 
 			SendSingle(ACKNOWLEDGE);		

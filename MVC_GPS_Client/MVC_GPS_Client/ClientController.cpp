@@ -28,7 +28,7 @@ void CONTROLLER::Connect() {
     SendSingle(SERVICE);
 
     if (ReceiveSingle() != GOODCONNECT) {
-      std::cout << "ѕришел некорректный ответ" << std::endl;
+      //std::cout << "ѕришел некорректный ответ" << std::endl;
 			GiveMessageToUser(ERR);
 			ThrowFatal(FailMessageExchange);
     }
@@ -80,12 +80,12 @@ void CONTROLLER::SendSingle(int input) {
 	for (int i = 0; i < N; i++) {
 		filename.getline(buff, 60);
 		msg1 = buff;
-		std::cout << msg1 << std::endl;
+		//std::cout << msg1 << std::endl;
 		int msg_size = msg1.size();
 		send(MyServer, msg1.c_str(), msg_size, NULL);
 		Sleep(30);
 	}
-	std::cout << "Sent!" << std::endl;
+	//std::cout << "Sent!" << std::endl;
 	filename.close();
 };
 
@@ -94,13 +94,13 @@ int CONTROLLER::ReceiveSingle() {
 	for (int i = 0; i < 3; i++) {
 		char msg[60] = {};
 		recv(MyServer, msg, sizeof(msg), NULL);
-    std::cout << msg << std::endl;
+    //std::cout << msg << std::endl;
 		Sleep(30);
 		if (i == 1) {
 			int answer = msg[14] - '0'; //¬от тут пересчитать индекс массива, сделано
       //std::cout << answer << std::endl;
       recv(MyServer, msg, sizeof(msg), NULL); //ѕолучаем закрывающую скобku
-			std::cout << "—ообщение прин€то!" << std::endl;
+			//std::cout << "—ообщение прин€то!" << std::endl;
       return answer;
 		}
 	}
@@ -109,7 +109,6 @@ int CONTROLLER::ReceiveSingle() {
 
 
 int CONTROLLER::Authorisation() {
-	Connect();
 	std::string login, password;
 	std::cout << "¬ведите логин: ";
   std::cin >> login;
@@ -126,7 +125,13 @@ int CONTROLLER::Authorisation() {
       SwitchJSONThread(flag);
       return 1; //ѕотоки включать здесь
     }
-	else return 0;
+		else {
+			AuthTries--;
+			if (!AuthTries) return 0;
+			std::cout << "Error! " << AuthTries << " tries last" << std::endl;
+			Sleep(1000);
+			Authorisation();
+		};
 };
 
 
@@ -217,14 +222,14 @@ void CONTROLLER::JSONInAThread(bool& flag) {
 		//ReceiveSingle();
 		Sleep(260);
 		counter++;
-		std::cout << counter << "messages sent" << std::endl;
+		//std::cout << counter << "messages sent" << std::endl;
 		if (counter > 15) {
 			char buf[60];
 			if (recv(MyServer, buf, sizeof(buf), NULL)) {
-				std::cout << buf << std::endl;
+				//std::cout << buf << std::endl;
 				if (counter > 30)	
-					if (buf[15] == '4') std::cout << " витанци€€€€€€€€" << std::endl;
-					else {
+					if (buf[15] != '4') /*std::cout << " витанци€€€€€€€€" << std::endl;*/
+					{
 						GenerateFATAL(FATALERR, NOAPPROVE);
 						SendSingle(SERVICE);
 					}
