@@ -1,0 +1,2 @@
+id=01 login=qwerty password=123321
+id=02 login=needle password=909090
