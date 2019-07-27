@@ -5,7 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "DataModel.h"
-#pragma comment(lib, "ws2_32.lib")
+//#pragma comment(lib, "ws2_32.lib")
 #include <WinSock2.h>
 
 class CONTROLLER : public DATAMODEL {

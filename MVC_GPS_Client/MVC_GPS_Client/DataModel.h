@@ -14,7 +14,7 @@
 #include "rapidjson/rapidjson.h"
 #include "RMC_Parser.h" //А вот и библиотека для функции; там структура RMC, парсер и проверка вводимой строки на целостность
 
-#pragma comment(lib, "LibRMCParser.lib")
+//#pragma comment(lib, "LibRMCParser.lib")
 
 using namespace rapidjson;
 

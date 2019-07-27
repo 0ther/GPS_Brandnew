@@ -151,6 +151,7 @@ void CONTROLLER::ThrowFatal(int input) {
 	}
 	default: break;
 	}
+	exit(0);
 }
 
 
