@@ -8,7 +8,7 @@ void CONTROLLER::Connect() {
 
 	if (WSAStartup(DLLVersion, &wsaData) != 0) {
 		ThrowFatal(WSAStartupError);
-		//тут кинуть ошибку
+		WriteIntoLog("Ошибка версии сокета");
 	}
 
 	SOCKADDR_IN addr;
@@ -25,7 +25,7 @@ void CONTROLLER::Connect() {
 
 	if (newConnection == 0) {
 		ThrowFatal(FailConnect);
-		//тут кинуть ошибку
+		WriteIntoLog("Ошибка установки соединения");
 	}
 	else {
 		Sock = newConnection;
@@ -175,7 +175,7 @@ void CONTROLLER::ParseService() {
 				}
 				case STARTSEND: //Клиент говорит, что сейчас будет передавать данные
 				{
-					SendSingle(GOODAUTH); //Закомментировать, если что
+					SendSingle(GOODAUTH); 
 					break;
 				}
 				case STOPSEND: //Закончил передавать данные
@@ -250,7 +250,10 @@ void CONTROLLER::ParseLogin() {
 			if (i == 2) pass = buf;
 		}
 		bool found = FindLogs("logusers.txt", login, pass);
-		if (found) SendSingle(GOODAUTH);
+		if (found) { 
+			SendSingle(GOODAUTH);
+			WriteIntoLog("Пользователь авторизован");
+		}
 		else SendSingle(ERR);
 		DB.close();
 	}
@@ -302,6 +305,7 @@ bool CONTROLLER::Authorisation(std::string login, std::string password) {
 
 void CONTROLLER::CloseConnection() {
 	closesocket(Sock);
+	WriteIntoLog("Сокет закрыт");
 };
 
 
@@ -351,6 +355,7 @@ bool CheckLogData(std::string login, std::string pass) {
 		char temp = pass[i];
 		if ((int)temp < 48 || (int)temp > 57) return false; //Только 6 цифр
 	}
+	WriteIntoLog("Данные админимстратора найдены");
 	return true;
 };
 
@@ -375,6 +380,7 @@ void CONTROLLER::AddUser() {
 
 		if (FindLogs("logusers.txt", templ, "")) {
 			std::cout << "Данные успешно записаны" << std::endl;
+			WriteIntoLog("Пользователь добавлен");
 		}
 		else {
 			std::cout << "Ошибка: не удалось записать данные" << std::endl;
@@ -517,6 +523,7 @@ void CONTROLLER::DeleteUser() {
 		std::cout << "Ошибка: пользователя с таким логином нет в системе" << std::endl;
 		Sleep(1000);
 		DeleteUser();
+		WriteIntoLog("Пользователь удалён");
 	}
 };
 

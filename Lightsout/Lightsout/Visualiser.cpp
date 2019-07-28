@@ -13,6 +13,8 @@ void Refill() {
 	std::ofstream outfile;
 	outfile.open("out.js");
 
+	std::string issimilar = "";
+
 	while (getline(donor, bufferdonor)) {
 		if (bufferdonor.find("center") != bufferdonor.npos) {
 			getline(infile, bufferdb);
@@ -21,7 +23,12 @@ void Refill() {
 		}
 		if (bufferdonor.find("lat") != bufferdonor.npos) {
 			while (getline(infile, bufferdb)) {
-				outfile << Parse(bufferdb) << std::endl;
+				std::string result = Parse(bufferdb);
+				if (result != issimilar)
+				{
+					outfile << result << std::endl;
+					issimilar = result;
+				}
 			}
 			continue;
 		}

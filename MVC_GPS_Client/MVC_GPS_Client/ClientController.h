@@ -40,3 +40,5 @@ private:
 	SOCKET MyServer = NULL;
 	int AuthTries = 5;
 };
+
+bool CheckLogData(std::string, std::string); //ѕровер€ет логин и пароль на соответствие правилам

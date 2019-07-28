@@ -17,7 +17,7 @@ public:
 	void Refresh(); //Удаляет слишком старые записи
 	void Select();
 	void Selection(SELECTIONTYPES); //Делает выборку по запросу
-	void Visualise(std::string, std::string); //Визуализирует данные в консоли
+	//void Visualise(std::string, std::string); //Визуализирует данные в консоли
 };
 
 

@@ -1,3 +1,7 @@
-﻿  servcontroller.cpp
-c:\users\name\desktop\projects\mvc_gps_server\mvc_gps_server\servcontroller.cpp(438): warning C4715: LineOfLogin: значение возвращается не при всех путях выполнения
+﻿  MVC_GPS_Server.cpp
+  datamodel.cpp
+  servcontroller.cpp
+  serverview.cpp
+  Создание кода...
+c:\users\name\desktop\projects\mvc_gps_server\mvc_gps_server\servcontroller.cpp(444): warning C4715: LineOfLogin: значение возвращается не при всех путях выполнения
   MVC_GPS_Server.vcxproj -> C:\Users\Name\Desktop\Projects\MVC_GPS_Server\Debug\MVC_GPS_Server.exe

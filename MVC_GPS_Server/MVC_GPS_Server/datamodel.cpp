@@ -105,5 +105,3 @@ void DATAMODEL::Selection(SELECTIONTYPES Type) { //Скорее всего, нужно было реал
 }; //Делает выборку по запросу
 
 
-void DATAMODEL::Visualise(std::string begin, std::string end) {
-}; //Визуализирует данные в консоли

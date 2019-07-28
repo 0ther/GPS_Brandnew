@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/Users/Name/Desktop/Projects/MVC_GPS_Client/MVC_GPS_Client/CMakeLists.txt
+  MVC_GPS_Client.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\stdio.h(1933): warning C4005: snprintf: изменение макроопределения
+  C:\Users\Name\Desktop\Projects\MVC_GPS_Client\MVC_GPS_Client\MVC_GPS_Client.cpp: note: см. предыдущее определение "snprintf"
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\stdio.h(1935): fatal error C1189: #error:  Macro definition of snprintf conflicts with Standard Library function declaration

@@ -111,27 +111,36 @@ int CONTROLLER::ReceiveSingle() {
 int CONTROLLER::Authorisation() {
 	std::string login, password;
 	std::cout << "Введите логин: ";
-  std::cin >> login;
+	std::cin >> login;
 	std::cout << std::endl << "Введите пароль: ";
-  std::cin >> password;
+	std::cin >> password;
 	std::cout << std::endl;
+	if (CheckLogData(login, password)) {
 	GenerateLogJSON(login, password);
-    SendSingle(LOG);
-    
-    if (ReceiveSingle() == GOODAUTH) {
-      std::cout << "Получилось!" << std::endl;
-      bool flag = true;
-      SwitchNMEAThread(flag);
-      SwitchJSONThread(flag);
-      return 1; //Потоки включать здесь
-    }
-		else {
-			AuthTries--;
-			if (!AuthTries) return 0;
-			std::cout << "Error! " << AuthTries << " tries last" << std::endl;
-			Sleep(1000);
-			Authorisation();
-		};
+	SendSingle(LOG);
+
+	if (ReceiveSingle() == GOODAUTH) {
+		std::cout << "Получилось!" << std::endl;
+		bool flag = true;
+		SwitchNMEAThread(flag);
+		SwitchJSONThread(flag);
+		return 1; //Потоки включать здесь
+	}
+	else {
+		AuthTries--;
+		if (!AuthTries) return 0;
+		std::cout << "Error! " << AuthTries << " tries last" << std::endl;
+		Sleep(1000);
+		Authorisation();
+	};
+  }
+	else {
+		AuthTries--;
+		if (!AuthTries) return 0;
+		std::cout << "Error! " << AuthTries << " tries last" << std::endl;
+		Sleep(1000);
+		Authorisation();
+	}
 };
 
 
@@ -275,3 +284,17 @@ void CONTROLLER::GenerateFATAL(int input, int reason) {
 		fout.close();
 	}
 }
+
+
+bool CheckLogData(std::string login, std::string pass) {
+	if (login.size() != 6 || pass.size() != 6) return false;
+	for (int i = 0; i < 6; i++) {
+		char temp = login[i];
+		if ((int)temp < 97 || (int)temp > 122) return false; //Только 6 латинских символов
+	}
+	for (int i = 0; i < 6; i++) {
+		char temp = pass[i];
+		if ((int)temp < 48 || (int)temp > 57) return false; //Только 6 цифр
+	}
+	return true;
+};

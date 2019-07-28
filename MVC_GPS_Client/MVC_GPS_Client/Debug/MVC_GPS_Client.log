@@ -1,4 +1,9 @@
 ﻿  ClientController.cpp
 c:\users\name\desktop\projects\mvc_gps_client\mvc_gps_client\datamodel.h(31): warning C4305: =: усечение из "double" в "float"
-c:\users\name\desktop\projects\mvc_gps_client\mvc_gps_client\clientcontroller.cpp(135): warning C4715: CONTROLLER::Authorisation: значение возвращается не при всех путях выполнения
+  ClientView.cpp
+c:\users\name\desktop\projects\mvc_gps_client\mvc_gps_client\datamodel.h(31): warning C4305: =: усечение из "double" в "float"
+  MVC_GPS_Client.cpp
+c:\users\name\desktop\projects\mvc_gps_client\mvc_gps_client\datamodel.h(31): warning C4305: =: усечение из "double" в "float"
+  Создание кода...
+c:\users\name\desktop\projects\mvc_gps_client\mvc_gps_client\clientcontroller.cpp(144): warning C4715: CONTROLLER::Authorisation: значение возвращается не при всех путях выполнения
   MVC_GPS_Client.vcxproj -> C:\Users\Name\Desktop\Projects\MVC_GPS_Client\Debug\MVC_GPS_Client.exe
